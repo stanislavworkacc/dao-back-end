@@ -19,4 +19,11 @@ export class ProposalsController {
     };
   }
 
+  @Get(':id/votes')
+  getVotes(@Param('id', ParseIntPipe) id: number) {
+    return {
+      success: true,
+      data: this.proposalsService.findVotes(id),
+    };
+  }
 }

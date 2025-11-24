@@ -1,10 +1,13 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { StorageService } from '../../services/storage/storage.service';
 
 @Injectable()
 export class ProposalsService {
-  constructor(private readonly _storageService: StorageService) {
-  }
+  constructor(private readonly _storageService: StorageService) {}
 
   findAll() {
     try {
@@ -34,5 +37,15 @@ export class ProposalsService {
     }
 
     return proposal;
+  }
+
+  findVotes(id: number) {
+    const proposal = this._storageService.getProposal(id.toString());
+
+    if (!proposal) {
+      throw new NotFoundException('Proposal not found');
+    }
+
+    return proposal.votes;
   }
 }
