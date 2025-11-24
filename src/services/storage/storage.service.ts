@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class StorageService {
@@ -15,8 +15,8 @@ export class StorageService {
       endBlock: 1,
       executedAt: '2022-01-01T00:00:00Z',
       executed: false,
-      voteCountFor: 0,
-      voteCountAgainst: 0,
+      voteCountFor: '0',
+      voteCountAgainst: '0',
       transactionHash: '0x0000000000000000000000000000000000000001',
       votes: [],
     });
@@ -24,5 +24,9 @@ export class StorageService {
 
   getProposals(): any[] {
     return Array.from(this.proposals.values());
+  }
+
+  getProposal(id: string) {
+    return this.proposals.get(id);
   }
 }
