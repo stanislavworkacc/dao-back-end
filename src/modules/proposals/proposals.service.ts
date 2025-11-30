@@ -12,7 +12,6 @@ export class ProposalsService {
   findAll() {
     try {
       const proposals = this._storageService.getProposals();
-      console.log('proposals', proposals);
 
       const updatedProposals = proposals.map((p: any) => {
         const { votes, ...proposal } = p;
