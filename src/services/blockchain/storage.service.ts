@@ -1,11 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class StorageService {
   public readonly events: any[] = [];
   public readonly proposals = new Map<string, any>();
+  lastBlockProcessed: number = 0;
 
   constructor() {
+    this.lastBlockProcessed = Number(process.env.START_BLOCK!);
     this.proposals.set(String(1), {
       id: 1,
       creator: '0x0000000000000000000000000000000000000001',
