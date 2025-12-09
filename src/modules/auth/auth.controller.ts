@@ -5,12 +5,15 @@ import { VerifyService } from './services/verify/verify.service';
 import { GetNonceDto } from './dto/get-nonce.dto';
 import { VerifySiweDto } from './dto/verify-siwe.dto';
 import { Web3AuthResult } from './interfaces/web3-auth-result.interface';
+import type { SessionHealthResult } from './interfaces/session-health.interface';
+import { CheckSessionService } from './services/check-session/check-session.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly _nonceService: NonceService,
     private readonly _verifyService: VerifyService,
+    private readonly _checkSessionService: CheckSessionService,
   ) {
   }
 
@@ -42,7 +45,22 @@ export class AuthController {
         path: '/',
       });
     }
-
     return result;
+  }
+
+  @Post('logout')
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('siwe_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      path: '/',
+    });
+    return { success: true };
+  }
+
+  @Get('health')
+  checkHealth(@Req() req: Request): SessionHealthResult {
+    return this._checkSessionService.checkSession(req);
   }
 }

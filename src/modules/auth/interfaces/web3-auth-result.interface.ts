@@ -4,4 +4,5 @@ export interface Web3AuthResult {
   token: string;
   message: string;
   success: boolean;
+  expiresAt: any
 }

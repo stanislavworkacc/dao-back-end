@@ -4,9 +4,16 @@ import { AuthController } from './auth.controller';
 import { NonceService } from './services/nonce/nonce.service';
 import { VerifyService } from './services/verify/verify.service';
 import { JwtService } from '@nestjs/jwt';
+import { CheckSessionService } from './services/check-session/check-session.service';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, NonceService, VerifyService, JwtService],
+  providers: [
+    AuthService,
+    NonceService,
+    VerifyService,
+    JwtService,
+    CheckSessionService,
+  ],
 })
 export class AuthModule {}

@@ -4,9 +4,17 @@ import { Web3AuthResult } from '../../interfaces/web3-auth-result.interface';
 import { AuthService } from '../../auth.service';
 import { JwtService } from '@nestjs/jwt';
 
+interface JwtPayload {
+  sub: string;
+  chainId: number;
+  type: string;
+  exp?: number;
+  iat?: number;
+}
+
 @Injectable()
 export class VerifyService {
-  private readonly logger = new Logger(VerifyService.name);
+  private readonly logger: Logger = new Logger(VerifyService.name);
   private readonly appDomain: string = process.env.APP_DOMAIN || 'localhost:4200';
 
   constructor(
@@ -48,7 +56,14 @@ export class VerifyService {
         type: 'siwe',
       };
 
-      const token: string = this.jwtService.sign(payload, { secret: process.env.JWT_SECRET! });
+      const token: string = this.jwtService.sign(payload, { secret: process.env.JWT_SECRET!, expiresIn: '10m', });
+
+      const decoded = this.jwtService.decode<JwtPayload>(token);
+      let expiresAt: string | undefined;
+
+      if (decoded?.exp) {
+        expiresAt = new Date(decoded.exp * 1000).toISOString();
+      }
 
       return {
         success: true,
@@ -56,6 +71,7 @@ export class VerifyService {
         chainId: Number(data.chainId),
         token,
         message: 'Authentication successful',
+        expiresAt,
       };
     } catch (e) {
       this.logger.error('SIWE verification error', e as Error);
