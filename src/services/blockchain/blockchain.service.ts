@@ -117,8 +117,7 @@ export class BlockchainService implements OnModuleInit {
   private handleProposalCreated(events: any) {
     for (const event of events) {
       try {
-        const [id, creator, description] = event.args;
-
+        const [id, description, creator] = event.args;
         const idStr = id.toString();
 
         this.logger.log('\nProposalCreated event detected');
